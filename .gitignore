@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Finance skills cache
+.finance-skills/
+
+# Test artifacts
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Temp strategy files
+/tmp_strategies/
