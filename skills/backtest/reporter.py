@@ -27,7 +27,7 @@ def format_results(result_json: str) -> str:
         "Final Value": f"${r['final_value']:,.2f}",
     }
 
-    title = f"BACKTEST: {r['ticker']}  |  {r['start_date']} → {r['end_date']}"
+    title = f"BACKTEST: {r['ticker']}  |  {r['start_date']} -> {r['end_date']}"
     sections.append(format_stats_box(title, stats))
 
     # Equity curve
@@ -45,7 +45,7 @@ def format_results(result_json: str) -> str:
     # Trade log (first 20)
     if r.get("trades"):
         sections.append("")
-        sections.append("━━━ Trade Log (last 20) ━━━")
+        sections.append("--- Trade Log (last 20) ---")
         trades = r["trades"][-20:]
         headers = ["Date", "Action", "Shares", "Price", "Value"]
         rows = [
@@ -64,6 +64,9 @@ def format_results(result_json: str) -> str:
 
 
 if __name__ == "__main__":
+    # Force UTF-8 output on Windows
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
     # Read JSON from stdin or file argument
     if len(sys.argv) > 1:
         with open(sys.argv[1]) as f:

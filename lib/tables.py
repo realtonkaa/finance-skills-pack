@@ -53,14 +53,14 @@ def format_stats_box(title: str, stats: dict[str, str]) -> str:
     inner_width = max(max_label + max_value + 4, len(title) + 4)
 
     lines = [
-        "╔" + "═" * inner_width + "╗",
-        "║" + title.center(inner_width) + "║",
-        "╠" + "═" * inner_width + "╣",
+        "+" + "=" * inner_width + "+",
+        "|" + title.center(inner_width) + "|",
+        "+" + "=" * inner_width + "+",
     ]
 
     for label, value in stats.items():
         padding = inner_width - len(label) - len(str(value)) - 4
-        lines.append(f"║  {label}{' ' * padding}{value}  ║")
+        lines.append(f"|  {label}{' ' * padding}{value}  |")
 
-    lines.append("╚" + "═" * inner_width + "╝")
+    lines.append("+" + "=" * inner_width + "+")
     return "\n".join(lines)

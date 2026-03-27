@@ -38,7 +38,7 @@ def plot_equity_curve(
     if dates:
         start = str(dates[0])[:10]
         end = str(dates[-1])[:10]
-        plt.xlabel(f"{start} → {end}")
+        plt.xlabel(f"{start} -> {end}")
 
     return plt.build()
 
@@ -74,7 +74,7 @@ def plot_monthly_returns(
     if not HAS_PLOTEXT:
         lines = ["Monthly Returns:"]
         for m, r in zip(months, returns):
-            bar = "█" * max(1, int(abs(r) * 2))
+            bar = "#" * max(1, int(abs(r) * 2))
             sign = "+" if r >= 0 else "-"
             lines.append(f"  {m}: {sign}{abs(r):.1f}% {bar}")
         return "\n".join(lines)
@@ -104,7 +104,7 @@ def _simple_text_chart(values: list, title: str) -> str:
     for i in range(0, len(values), step):
         v = values[i]
         bar_len = int((v - min_val) / val_range * chart_width)
-        lines.append(f"  {'█' * bar_len} ${v:,.0f}")
+        lines.append(f"  {'#' * bar_len} ${v:,.0f}")
 
     lines.append(f"  Min: ${min_val:,.0f}  Max: ${max_val:,.0f}")
     return "\n".join(lines)

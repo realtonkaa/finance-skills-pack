@@ -30,8 +30,8 @@ class TestCache:
 
     def test_expired_returns_none(self):
         set_cached("old_key", {"data": "old"})
-        # Patch the timestamp to make it expired
-        result = get_cached("old_key", ttl_hours=0.0)  # 0 hours = always expired
+        # Use a tiny negative TTL so any age exceeds it
+        result = get_cached("old_key", ttl_hours=-1.0)
         assert result is None
 
     def test_stale_returns_expired_data(self):

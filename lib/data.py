@@ -63,8 +63,10 @@ def get_history(
         # Keep only OHLCV columns
         df = df[["Open", "High", "Low", "Close", "Volume"]]
 
-        # Cache the result
-        cache_data = df.to_dict()
+        # Cache the result (convert Timestamp index to strings for JSON)
+        cache_df = df.copy()
+        cache_df.index = cache_df.index.astype(str)
+        cache_data = cache_df.to_dict()
         set_cached(cache_key, cache_data, ttl_hours=24.0)
 
         return df
