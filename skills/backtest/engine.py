@@ -156,10 +156,13 @@ class BacktestEngine:
             bh_return = 0.0
 
         # Sharpe ratio (daily returns, annualized)
+        # Using risk-free rate of ~4.5% annualized (~0.018% daily) as baseline
+        DAILY_RISK_FREE = 0.045 / 252
         if len(equity) > 1:
             daily_returns = np.diff(equity) / equity[:-1]
+            excess_returns = daily_returns - DAILY_RISK_FREE
             if np.std(daily_returns) > 0:
-                sharpe = (np.mean(daily_returns) / np.std(daily_returns)) * math.sqrt(
+                sharpe = (np.mean(excess_returns) / np.std(daily_returns)) * math.sqrt(
                     252
                 )
             else:

@@ -132,7 +132,12 @@ Always end with:
 **User:** "Buy MSFT when the price drops 3% in a single day, sell after holding for 5 trading days"
 **Action:** Use `base_strategy.py`, write custom logic:
 ```python
+_buy_day = None  # Track which day we bought
+
 def strategy(row, history, shares, cash):
+    global _buy_day
+    current_day = len(history) - 1
+
     if len(history) < 2:
         return {"action": "hold"}
 
@@ -140,17 +145,15 @@ def strategy(row, history, shares, cash):
     daily_change = (row["Close"] - history["Close"].iloc[-2]) / history["Close"].iloc[-2]
 
     if daily_change < -0.03 and shares == 0:
+        _buy_day = current_day
         return {"action": "buy", "pct_of_cash": 1.0}
 
-    # Sell after 5 days
-    if shares > 0:
-        # Find the last buy trade by checking when we got shares
-        days_held = 0
-        for i in range(len(history) - 1, -1, -1):
-            if i < len(history) - 1:
-                days_held += 1
-            if days_held >= 5:
-                return {"action": "sell", "pct_of_position": 1.0}
+    # Sell after 5 trading days
+    if shares > 0 and _buy_day is not None:
+        days_held = current_day - _buy_day
+        if days_held >= 5:
+            _buy_day = None
+            return {"action": "sell", "pct_of_position": 1.0}
 
     return {"action": "hold"}
 ```
