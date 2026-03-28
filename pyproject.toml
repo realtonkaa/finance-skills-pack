@@ -1,0 +1,10 @@
+[project]
+name = "finance-skills-pack"
+version = "1.0.0"
+description = "Claude Code skills for financial analysis and plain-English strategy backtesting"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

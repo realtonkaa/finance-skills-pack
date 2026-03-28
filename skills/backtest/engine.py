@@ -8,8 +8,10 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
-# Add project root to path so lib/ can be imported
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+# Add paths so lib/ can be imported (works from repo root or installed skills dir)
+_engine_dir = Path(__file__).resolve().parent
+sys.path.insert(0, str(_engine_dir.parent.parent))  # repo root: gith/lib/
+sys.path.insert(0, str(_engine_dir))                 # installed: skills/backtest/lib/
 
 import numpy as np
 import pandas as pd

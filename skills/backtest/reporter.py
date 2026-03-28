@@ -4,7 +4,9 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+_reporter_dir = Path(__file__).resolve().parent
+sys.path.insert(0, str(_reporter_dir.parent.parent))  # repo root
+sys.path.insert(0, str(_reporter_dir))                 # installed skills dir
 
 from lib.charts import plot_equity_curve, plot_drawdown
 from lib.tables import format_stats_box, format_table

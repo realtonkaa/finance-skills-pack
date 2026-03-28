@@ -7,10 +7,6 @@ description: >
   metrics including returns, Sharpe ratio, max drawdown, win rate, trade log,
   and ASCII equity curve. Use when the user wants to test, backtest, or evaluate
   a trading strategy, investment idea, or technical analysis approach.
-allowed-tools:
-  - Bash(python *)
-  - Read
-  - Write
 ---
 
 # Backtest — Plain English Strategy Testing
@@ -52,7 +48,7 @@ Check if the strategy matches a pre-built template. This is preferred because te
 
 **If a template matches:**
 1. Read the matching template file from `skills/backtest/templates/`
-2. Copy it to a temporary file (e.g., `/tmp/backtest_strategy.py` or a temp path in the project)
+2. Write it to a temporary file in the project directory (e.g., `_backtest_strategy_tmp.py`)
 3. Adjust only the parameter values at the top of the file
 4. Do NOT modify the strategy logic — just the constants
 

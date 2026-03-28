@@ -38,6 +38,14 @@ def main():
             shutil.copytree(skill_dir, dest)
             print(f"  Installed: /{skill_dir.name} -> {dest}")
 
+    # Copy lib/ directory (needed by /backtest engine)
+    lib_src = project_root / "lib"
+    lib_dest = target / "backtest" / "lib"
+    if lib_dest.exists():
+        shutil.rmtree(lib_dest)
+    shutil.copytree(lib_src, lib_dest)
+    print(f"  Installed: lib/ -> {lib_dest}")
+
     # Install Python dependencies for /backtest
     print("\nInstalling Python dependencies for /backtest...")
     subprocess.run(
