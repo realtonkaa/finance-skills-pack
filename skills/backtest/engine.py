@@ -218,8 +218,47 @@ class BacktestEngine:
         )
 
 
+BLOCKED_IMPORTS = {
+    "os", "subprocess", "shutil", "socket", "http", "urllib",
+    "requests", "paramiko", "ftplib", "smtplib", "ctypes",
+    "webbrowser", "code", "codeop", "compile", "execfile",
+}
+
+
+def _validate_strategy(path: str):
+    """Scan strategy file for dangerous imports before execution."""
+    import ast as _ast
+
+    source = Path(path).read_text()
+    tree = _ast.parse(source)
+
+    for node in _ast.walk(tree):
+        if isinstance(node, _ast.Import):
+            for alias in node.names:
+                top = alias.name.split(".")[0]
+                if top in BLOCKED_IMPORTS:
+                    raise ValueError(
+                        f"Strategy file imports blocked module '{alias.name}'. "
+                        f"Strategy files may only import from 'lib' and standard math/data libraries."
+                    )
+        elif isinstance(node, _ast.ImportFrom):
+            if node.module:
+                top = node.module.split(".")[0]
+                if top in BLOCKED_IMPORTS:
+                    raise ValueError(
+                        f"Strategy file imports from blocked module '{node.module}'. "
+                        f"Strategy files may only import from 'lib' and standard math/data libraries."
+                    )
+
+
 def load_strategy(path: str):
-    """Dynamically load a strategy function from a Python file."""
+    """Dynamically load a strategy function from a Python file.
+
+    Validates the file for dangerous imports before execution.
+    """
+    # Security: scan for dangerous imports before executing
+    _validate_strategy(path)
+
     spec = importlib.util.spec_from_file_location("strategy_module", path)
     module = importlib.util.module_from_spec(spec)
 
