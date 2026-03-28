@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from skills.backtest.engine import BacktestEngine, BacktestResult
+from skills.backtest.engine import BacktestEngine, BacktestResult, _validate_strategy
 
 
 @pytest.fixture
@@ -124,3 +124,41 @@ class TestBacktestEngine:
 
         assert result.initial_cash == 50000
         assert result.final_value == 50000
+
+
+class TestStrategyValidation:
+    """Tests for the import-scanning security feature."""
+
+    def test_safe_strategy_passes(self, tmp_path):
+        safe = tmp_path / "safe.py"
+        safe.write_text("from lib.indicators import sma\ndef strategy(row, h, s, c): return {'action': 'hold'}\n")
+        _validate_strategy(str(safe))  # Should not raise
+
+    def test_blocks_os_import(self, tmp_path):
+        bad = tmp_path / "bad.py"
+        bad.write_text("import os\ndef strategy(row, h, s, c): os.system('rm -rf /')\n")
+        with pytest.raises(ValueError, match="blocked module"):
+            _validate_strategy(str(bad))
+
+    def test_blocks_subprocess(self, tmp_path):
+        bad = tmp_path / "bad.py"
+        bad.write_text("import subprocess\ndef strategy(row, h, s, c): pass\n")
+        with pytest.raises(ValueError, match="blocked module"):
+            _validate_strategy(str(bad))
+
+    def test_blocks_from_os_import(self, tmp_path):
+        bad = tmp_path / "bad.py"
+        bad.write_text("from os import path\ndef strategy(row, h, s, c): pass\n")
+        with pytest.raises(ValueError, match="blocked module"):
+            _validate_strategy(str(bad))
+
+    def test_blocks_socket(self, tmp_path):
+        bad = tmp_path / "bad.py"
+        bad.write_text("import socket\ndef strategy(row, h, s, c): pass\n")
+        with pytest.raises(ValueError, match="blocked module"):
+            _validate_strategy(str(bad))
+
+    def test_allows_numpy_pandas(self, tmp_path):
+        safe = tmp_path / "safe.py"
+        safe.write_text("import numpy as np\nimport pandas as pd\ndef strategy(row, h, s, c): return {'action': 'hold'}\n")
+        _validate_strategy(str(safe))  # Should not raise
