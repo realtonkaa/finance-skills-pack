@@ -29,11 +29,8 @@ A collection of 4 Claude Code skills that bring financial analysis directly into
 git clone https://github.com/realtonkaa/finance-skills-pack.git
 cd finance-skills-pack
 
-# Install skills to Claude Code (global)
-cp -r skills/* ~/.claude/skills/
-
-# For /backtest: install Python dependencies
-pip install -r requirements.txt
+# Install everything (skills + dependencies)
+python setup_env.py --global
 ```
 
 Then in Claude Code:
